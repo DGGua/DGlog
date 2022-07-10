@@ -1,16 +1,22 @@
+import { useNavigate } from "react-router-dom";
+import { BlogBrief } from "../../types";
 import "../scss/BlogItem.scss";
 
-export default function BlogItem() {
+export interface BlogItemProps {
+  blog: BlogBrief;
+}
+
+export default function BlogItem(props: BlogItemProps) {
+  const { blog } = props;
+  const navigate = useNavigate();
   return (
-    <div className="blog-item">
+    <div className="blog-item" onClick={() => navigate(`/${blog.blog_id}`)}>
       <div className="blog-item-header">
-        <span className="blog-item-title">标题标题</span>
-        <span className="blog-item-date">2022/12/12</span>
+        <span className="blog-item-title">{blog.title}</span>
+        <span className="blog-item-date">{blog.last_modify}</span>
       </div>
       <hr />
-      <div className="blog-item-content">
-        废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话废话
-      </div>
+      <div className="blog-item-content">{blog.brief} </div>
     </div>
   );
 }
