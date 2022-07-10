@@ -1,5 +1,3 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import MainPage from './pages/ts/MainPage';
 import Navigator from './components/ts/Navigator';
@@ -12,6 +10,7 @@ function App() {
   return (
     <>
       <Navigator tags={tags}></Navigator>
+      
       <MainPage></MainPage>
     </>
   );
