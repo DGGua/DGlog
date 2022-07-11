@@ -17,7 +17,7 @@ export default function BlogPage() {
   }, []);
   useEffect(() => {
     if (!blogDetail) return;
-    setContentHTML(sanitize(marked(blogDetail.content)));
+    setContentHTML(sanitize(marked(blogDetail.content || "")));
   }, [blogDetail]);
 
   useEffect(() => {
