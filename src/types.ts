@@ -1,7 +1,11 @@
 export interface BlogBrief {
   blog_id: number;
-  brief: string;
+  title: string;
   create_time: string;
   last_modify: string;
-  title: string;
+  brief: string;
+}
+
+export interface BlogDetail extends BlogBrief {
+  content: string;
 }
