@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import { BlogBrief } from "../../types";
 import "../scss/BlogItem.scss";
@@ -13,7 +14,9 @@ export default function BlogItem(props: BlogItemProps) {
     <div className="blog-item" onClick={() => navigate(`/${blog.blog_id}`)}>
       <div className="blog-item-header">
         <span className="blog-item-title">{blog.title}</span>
-        <span className="blog-item-date">{blog.last_modify}</span>
+        <span className="blog-item-date">
+          {dayjs(blog.last_modify).format("MM/DD hh:mm:ss")}
+        </span>
       </div>
       <hr />
       <div className="blog-item-content">{blog.brief} </div>
