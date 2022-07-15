@@ -1,0 +1,16 @@
+.blog-item {
+  width: calc(100% - 3em);
+  cursor: default;
+  margin-bottom: 3em;
+  .blog-item-header {
+    .blog-item-title {
+      font-weight: 1000;
+      font-size: xx-large;
+      margin-right: 1em;
+    }
+    .blog-item-date {
+      font-style: italic;
+      color: #00000050;
+    }
+  }
+}

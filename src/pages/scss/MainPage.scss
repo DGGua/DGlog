@@ -1,0 +1,32 @@
+$asideWidth: 250px;
+
+.main-page {
+  aside {
+    position: fixed;
+    width: $asideWidth;
+
+    .user {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      .user-avatar {
+        width: calc($asideWidth - 100px);
+        border-radius: 50%;
+        border: 2px solid #00000050;
+      }
+      .user-name {
+        font-weight: 800;
+        font-size: x-large;
+      }
+      .user-description {
+        max-width: 80%;
+        text-align: center;
+        color: #00000080;
+      }
+    }
+  }
+  .blog-container {
+    margin-left: $asideWidth;
+    margin-top: 2em;
+  }
+}

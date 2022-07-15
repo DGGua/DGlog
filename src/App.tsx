@@ -1,25 +1,24 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-
+import "./App.css";
+import MainPage from "./pages/ts/MainPage";
+import Navigator from "./components/ts/Navigator";
+import { Route, Routes } from "react-router-dom";
+import BlogPage from "./pages/ts/BlogPage";
+import TempPage from "./pages/ts/TempPage";
 function App() {
+  const tags = [
+    { name: "首页", url: "/home" },
+    { name: "DGoDo", url: "http://dgodo.dggua.top" },
+  ];
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Navigator tags={tags}></Navigator>
+      <Routes>
+        <Route path="/" element={<MainPage />} />
+        <Route path="/:blogId" element={<BlogPage />} />
+        <Route path="/temp" element={<TempPage />} />
+      </Routes>
+    </>
   );
 }
 
