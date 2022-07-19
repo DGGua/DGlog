@@ -1,0 +1,15 @@
+.edit-page {
+  width: 98vw;
+  display: flex;
+  .edit-panel {
+    position: sticky;
+    width: 50%;
+    top: 74.5px;
+    height: calc(100vh - 74.5px);
+    display: flex;
+    flex-direction: column;
+  }
+  .preview-panel {
+    width: 50%;
+  }
+}
