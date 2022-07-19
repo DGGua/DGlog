@@ -54,6 +54,7 @@ export default function TempPage() {
         <Editor
           defaultLanguage="markdown"
           value={content}
+          options={{ wordWrap: "on" }}
           onChange={(value) => {
             setContent(value || "");
           }}
