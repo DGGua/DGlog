@@ -15,8 +15,8 @@ export default function TempPage() {
     const idNum = Number.parseInt(id);
     if (isNaN(idNum)) return;
     blogService.detail(idNum).then((res) => {
-      console.log(res.data.data.content);
       setContent(res.data.data.content);
+      alert(res.data.data.content);
     });
   }
   function updateContent() {
@@ -25,13 +25,11 @@ export default function TempPage() {
     if (isNaN(idNum)) return;
     tempService
       .update(idNum, content, secret)
-      .then((res) => console.log(res.data.msg));
+      .then((res) => alert(res.data.msg));
   }
 
   function createblog() {
-    tempService
-      .create(content, secret)
-      .then((res) => console.log(res.data.msg));
+    tempService.create(content, secret).then((res) => alert(res.data.msg));
   }
 
   return (
