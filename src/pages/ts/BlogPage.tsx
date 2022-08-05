@@ -14,7 +14,7 @@ export default function BlogPage() {
     blogService.detail(Number.parseInt(blogId || "")).then(({ data }) => {
       setBlogDetail(data.data);
     });
-  }, []);
+  }, [blogId]);
   useEffect(() => {
     if (!blogDetail) return;
     setContentHTML(sanitize(marked(blogDetail.content || "")));
