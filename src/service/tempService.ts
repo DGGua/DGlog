@@ -1,5 +1,4 @@
 import axios from "axios";
-import { BlogBrief, BlogDetail } from "../types";
 import { globalResponse, perfix } from "./globalService";
 
 export const tempService = {
