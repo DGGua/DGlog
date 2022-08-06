@@ -1,6 +1,5 @@
 import Editor from "@monaco-editor/react";
-import { marked } from "marked";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import MarkdownPreview from "../../components/ts/MarkdownPreview";
 import { blogService } from "../../service/blogService";
 import { tempService } from "../../service/tempService";
