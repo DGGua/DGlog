@@ -12,4 +12,9 @@ export const editService = {
       id, content, secret
     });
   },
+  uploadImage: (image: File) => {
+    const form = new FormData();
+    form.append("image", image)
+    return axios.post<globalResponse<string>>(perfix + "/image/uploadImage", form)
+  }
 };
