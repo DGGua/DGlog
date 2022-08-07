@@ -1,14 +1,15 @@
 import Editor from "@monaco-editor/react";
 import { useState } from "react";
+import ImageList, { ImageItem } from "../../components/ts/ImageList";
 import MarkdownPreview from "../../components/ts/MarkdownPreview";
 import { blogService } from "../../service/blogService";
-import { tempService } from "../../service/tempService";
+import { editService } from "../../service/editService";
 import "../scss/EditPage.scss";
 export default function TempPage() {
   const [id, setId] = useState<string>();
   const [secret, setSecret] = useState<string>("");
   const [content, setContent] = useState<string>("");
-
+  const [images, setImages] = useState<ImageItem[]>([]);
   function getContent() {
     if (!id) return;
     const idNum = Number.parseInt(id);
@@ -22,13 +23,33 @@ export default function TempPage() {
     if (!id) return;
     const idNum = Number.parseInt(id);
     if (isNaN(idNum)) return;
-    tempService
+    editService
       .update(idNum, content, secret)
       .then((res) => alert(res.data.msg));
   }
-
   function createblog() {
-    tempService.create(content, secret).then((res) => alert(res.data.msg));
+    editService.create(content, secret).then((res) => alert(res.data.msg));
+  }
+  function uploadImages() {
+    Promise.all(
+      images
+        .filter((image) => image.status === "notUploaded")
+        .map((image) => editService.uploadImage(image.file))
+    ).then((res) => {
+      // refresh list
+      let index = 0;
+      setImages(
+        images.map((image) =>
+          image.status === "uploaded"
+            ? image
+            : {
+                status: "uploaded",
+                file: image.file,
+                id: res[index++].data.data,
+              }
+        )
+      );
+    });
   }
 
   return (
@@ -56,6 +77,10 @@ export default function TempPage() {
             setContent(value || "");
           }}
         ></Editor>
+        <div className="image-panel">
+          <ImageList images={images} onImagesChange={setImages} />
+          <button onClick={uploadImages}>upload</button>
+        </div>
       </div>
       <div className="preview-panel">
         <MarkdownPreview content={content} />

@@ -1,0 +1,17 @@
+.image-div {
+  position: relative;
+  text-align: center;
+  vertical-align: middle;
+  border: solid 1px gray;
+  background: #e0e0e0;
+  img {
+    max-height: 100%;
+    max-width: 100%;
+  }
+  i {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    size: 50px;
+  }
+}
