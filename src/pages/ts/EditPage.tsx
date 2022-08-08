@@ -2,6 +2,7 @@ import Editor from "@monaco-editor/react";
 import { useState } from "react";
 import ImageList, { ImageItem } from "../../components/ts/ImageList";
 import MarkdownPreview from "../../components/ts/MarkdownPreview";
+import Modal from "../../components/ts/Modal";
 import { blogService } from "../../service/blogService";
 import { editService } from "../../service/editService";
 import "../scss/EditPage.scss";
@@ -9,9 +10,8 @@ export default function TempPage() {
   const [id, setId] = useState<string>();
   const [secret, setSecret] = useState<string>("");
   const [content, setContent] = useState<string>("");
-  const [images, setImages] = useState<ImageItem[]>([
-    { status: "uploaded", file: new File([], ""), id: "1F1C630D" },
-  ]);
+  const [images, setImages] = useState<ImageItem[]>([]);
+  const [showConfig, setShowConfig] = useState<boolean>(false);
   function getContent() {
     if (!id) return;
     const idNum = Number.parseInt(id);
@@ -53,6 +53,9 @@ export default function TempPage() {
       );
     });
   }
+  function configBlog() {
+    setShowConfig(true);
+  }
 
   return (
     <div className="edit-page">
@@ -70,6 +73,7 @@ export default function TempPage() {
           ></input>
           <button onClick={updateContent}>更新</button>
           <button onClick={createblog}>创建</button>
+          <button onClick={configBlog}>配置</button>
         </div>
         <Editor
           defaultLanguage="markdown"
@@ -87,6 +91,9 @@ export default function TempPage() {
       <div className="preview-panel">
         <MarkdownPreview content={content} />
       </div>
+      <Modal show={showConfig}>
+        <button onClick={() => setShowConfig(false)}>关闭</button>
+      </Modal>
     </div>
   );
 }
