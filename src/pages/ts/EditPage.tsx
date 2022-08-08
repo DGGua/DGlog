@@ -9,7 +9,9 @@ export default function TempPage() {
   const [id, setId] = useState<string>();
   const [secret, setSecret] = useState<string>("");
   const [content, setContent] = useState<string>("");
-  const [images, setImages] = useState<ImageItem[]>([]);
+  const [images, setImages] = useState<ImageItem[]>([
+    { status: "uploaded", file: new File([], ""), id: "1F1C630D" },
+  ]);
   function getContent() {
     if (!id) return;
     const idNum = Number.parseInt(id);

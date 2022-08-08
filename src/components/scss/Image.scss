@@ -13,5 +13,9 @@
     right: 0;
     bottom: 0;
     size: 50px;
+
+    &.uploaded{
+      cursor: copy;
+    }
   }
 }
