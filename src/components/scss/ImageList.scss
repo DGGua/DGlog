@@ -1,13 +1,14 @@
 .image-list {
   //   height: 250px;
   display: flex;
+  gap: 20px;
   overflow-x: auto;
-  overflow-y: hidden;
+  overflow-y: auto;
   label {
     width: 150px;
     height: 150px;
     text-align: center;
-    border: dashed 1px gray;
+    border: ridge 1px gray;
     input {
       display: none;
     }

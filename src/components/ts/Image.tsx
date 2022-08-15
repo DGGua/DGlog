@@ -23,11 +23,11 @@ export default function Image(props: ImageProps) {
     >
       <img src={src} alt="" />
       {url ? (
-        <i className="iconfont" onClick={copyUrl}>
+        <i className="iconfont uploaded" onClick={copyUrl}>
           &#xeb70;
         </i>
       ) : (
-        <i className="iconfont">&#xe651;</i>
+        <i className="iconfont not-upload">&#xe651;</i>
       )}
     </div>
   );
