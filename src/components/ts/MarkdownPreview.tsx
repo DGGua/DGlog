@@ -5,6 +5,7 @@ import "../scss/MarkdownPreview.scss";
 export interface MarkdownPreviewProps {
   content: string;
 }
+// Options from https://marked.js.org/using_advanced#options
 marked.use({
   highlight: (code, lang) => {
     console.log(hljs.highlightAuto(code, [lang]).value);

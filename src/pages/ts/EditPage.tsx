@@ -4,11 +4,12 @@ import ImageList, { ImageItem } from "../../components/ts/ImageList";
 import MarkdownPreview from "../../components/ts/MarkdownPreview";
 import { blogService } from "../../service/blogService";
 import { editService } from "../../service/editService";
+import { AnalyzeInfo, analyzeMarkdown } from "../../utils/MarkdownAnalyzor";
 import "../scss/EditPage.scss";
 export default function TempPage() {
   const [id, setId] = useState<string>();
   const [secret, setSecret] = useState<string>("");
-  const [content, setContent] = useState<string>("");
+  const [analyzeInfo, setAnalyzeInfo] = useState<AnalyzeInfo>();
   const [images, setImages] = useState<ImageItem[]>([
     // { status: "uploaded", file: new File([], ""), id: "1F1C630D" },
   ]);
@@ -17,7 +18,7 @@ export default function TempPage() {
     const idNum = Number.parseInt(id);
     if (isNaN(idNum)) return;
     blogService.detail(idNum).then((res) => {
-      setContent(res.data.data.content);
+      setAnalyzeInfo(analyzeMarkdown(res.data.data.content));
       alert(res.data.data.content);
     });
   }
@@ -26,11 +27,13 @@ export default function TempPage() {
     const idNum = Number.parseInt(id);
     if (isNaN(idNum)) return;
     editService
-      .update(idNum, content, secret)
+      .update(idNum, analyzeInfo?.raw || "", secret)
       .then((res) => alert(res.data.msg));
   }
   function createblog() {
-    editService.create(content, secret).then((res) => alert(res.data.msg));
+    editService
+      .create(analyzeInfo?.raw || "", secret)
+      .then((res) => alert(res.data.msg));
   }
   function uploadImages() {
     Promise.all(
@@ -73,10 +76,10 @@ export default function TempPage() {
         </div>
         <Editor
           defaultLanguage="markdown"
-          value={content}
+          value={analyzeInfo?.raw}
           options={{ wordWrap: "on" }}
           onChange={(value) => {
-            setContent(value || "");
+            setAnalyzeInfo(analyzeMarkdown(value || ""));
           }}
         ></Editor>
         <div className="image-panel">
@@ -85,7 +88,7 @@ export default function TempPage() {
         </div>
       </div>
       <div className="preview-panel">
-        <MarkdownPreview content={content} />
+        <MarkdownPreview content={analyzeInfo?.text || ""} />
       </div>
     </div>
   );
