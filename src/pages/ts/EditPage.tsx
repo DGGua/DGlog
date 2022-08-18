@@ -3,6 +3,7 @@ import { useState } from "react";
 import ImageList, { ImageItem } from "../../components/ts/ImageList";
 import MarkdownPreview from "../../components/ts/MarkdownPreview";
 import Modal from "../../components/ts/Modal";
+import Table from "../../components/ts/Table";
 import { blogService } from "../../service/blogService";
 import { editService } from "../../service/editService";
 import { AnalyzeInfo, analyzeMarkdown } from "../../utils/MarkdownAnalyzor";
@@ -14,6 +15,7 @@ export default function TempPage() {
   const [images, setImages] = useState<ImageItem[]>([
     // { status: "uploaded", file: new File([], ""), id: "1F1C630D" },
   ]);
+  const [showConfig, setShowConfig] = useState(false);
   function getContent() {
     if (!id) return;
     const idNum = Number.parseInt(id);
@@ -60,7 +62,6 @@ export default function TempPage() {
   function configBlog() {
     setShowConfig(true);
   }
-
   return (
     <div className="edit-page">
       <div className="edit-panel">
@@ -77,7 +78,7 @@ export default function TempPage() {
           ></input>
           <button onClick={updateContent}>更新</button>
           <button onClick={createblog}>创建</button>
-          <button onClick={configBlog}>配置</button>
+          <button onClick={configBlog}>文章参数</button>
         </div>
         <Editor
           defaultLanguage="markdown"
@@ -96,6 +97,7 @@ export default function TempPage() {
         <MarkdownPreview content={analyzeInfo?.text || ""} />
       </div>
       <Modal show={showConfig}>
+        <Table data={analyzeInfo?.headerProps}></Table>
         <button onClick={() => setShowConfig(false)}>关闭</button>
       </Modal>
     </div>
