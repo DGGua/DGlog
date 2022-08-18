@@ -6,7 +6,7 @@ import BlogPage from "./pages/ts/BlogPage";
 import EditPage from "./pages/ts/EditPage";
 function App() {
   const tags = [
-    { name: "首页", url: "/" },
+    { name: "首页", url: "http://dggua.top" },
     { name: "DGoDo", url: "http://dgodo.dggua.top" },
   ];
 
