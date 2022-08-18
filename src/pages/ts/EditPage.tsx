@@ -2,6 +2,7 @@ import Editor from "@monaco-editor/react";
 import { useState } from "react";
 import ImageList, { ImageItem } from "../../components/ts/ImageList";
 import MarkdownPreview from "../../components/ts/MarkdownPreview";
+import Modal from "../../components/ts/Modal";
 import { blogService } from "../../service/blogService";
 import { editService } from "../../service/editService";
 import { AnalyzeInfo, analyzeMarkdown } from "../../utils/MarkdownAnalyzor";
@@ -56,6 +57,9 @@ export default function TempPage() {
       );
     });
   }
+  function configBlog() {
+    setShowConfig(true);
+  }
 
   return (
     <div className="edit-page">
@@ -73,6 +77,7 @@ export default function TempPage() {
           ></input>
           <button onClick={updateContent}>更新</button>
           <button onClick={createblog}>创建</button>
+          <button onClick={configBlog}>配置</button>
         </div>
         <Editor
           defaultLanguage="markdown"
@@ -90,6 +95,9 @@ export default function TempPage() {
       <div className="preview-panel">
         <MarkdownPreview content={analyzeInfo?.text || ""} />
       </div>
+      <Modal show={showConfig}>
+        <button onClick={() => setShowConfig(false)}>关闭</button>
+      </Modal>
     </div>
   );
 }
