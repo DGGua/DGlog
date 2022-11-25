@@ -6,7 +6,6 @@ import { BlogBrief } from "../../types";
 import { blogService } from "../../service/blogService";
 export default function MainPage() {
   const [blogs, setBlogs] = useState<BlogBrief[]>([]);
-
   useEffect(() => {
     blogService.list().then(({ data }) => {
       setBlogs(data.data);
