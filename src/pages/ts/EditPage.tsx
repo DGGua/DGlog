@@ -1,28 +1,50 @@
-import Editor from "@monaco-editor/react";
-import { useState } from "react";
-import ImageList, { ImageItem } from "../../components/ts/ImageList";
-import MarkdownPreview from "../../components/ts/MarkdownPreview";
-import Modal from "../../components/ts/Modal";
-import Table from "../../components/ts/Table";
+import { useEffect, useState } from "react";
+import Vditor from "vditor";
+import "vditor/dist/index.css";
 import { blogService } from "../../service/blogService";
 import { editService } from "../../service/editService";
-import { AnalyzeInfo, analyzeMarkdown } from "../../utils/MarkdownAnalyzor";
 import "../scss/EditPage.scss";
 export default function TempPage() {
   const [id, setId] = useState<string>();
   const [secret, setSecret] = useState<string>("");
-  const [analyzeInfo, setAnalyzeInfo] = useState<AnalyzeInfo>();
-  const [images, setImages] = useState<ImageItem[]>([
-    // { status: "uploaded", file: new File([], ""), id: "1F1C630D" },
-  ]);
-  const [showConfig, setShowConfig] = useState(false);
+  const [analyzeInfo, setAnalyzeInfo] = useState<string>(
+    localStorage.getItem("buf") || ""
+  );
+  // const [images, setImages] = useState<ImageItem[]>([
+  // { status: "uploaded", file: new File([], ""), id: "1F1C630D" },
+  // ]);
+  const [vd, setVd] = useState<Vditor>();
+  const [timeoutt, settimeoutt] = useState<NodeJS.Timeout>();
+  useEffect(() => {
+    const vditor = new Vditor("vditor", {
+      after: () => {
+        vditor.setValue(analyzeInfo);
+        setVd(vditor);
+      },
+      input: () => {
+        if (timeoutt) {
+          clearTimeout(timeoutt);
+        }
+        settimeoutt(
+          setTimeout(() => {
+            localStorage.setItem("buf", vditor.getValue());
+            setAnalyzeInfo(vditor.getValue());
+          }, 1000)
+        );
+      },
+    });
+  }, []);
+  useEffect(() => {
+    vd?.setValue(analyzeInfo);
+  }, [analyzeInfo, vd]);
   function getContent() {
     if (!id) return;
     const idNum = Number.parseInt(id);
     if (isNaN(idNum)) return;
     blogService.detail(idNum).then((res) => {
-      setAnalyzeInfo(analyzeMarkdown(res.data.data.content));
-      alert(res.data.data.content);
+      let { content, title } = res.data.data;
+      while (content.startsWith("\n")) content = content.slice(1);
+      setAnalyzeInfo(["# " + content, title].join("\n"));
     });
   }
   function updateContent() {
@@ -30,38 +52,36 @@ export default function TempPage() {
     const idNum = Number.parseInt(id);
     if (isNaN(idNum)) return;
     editService
-      .update(idNum, analyzeInfo?.raw || "", secret)
+      .update(idNum, analyzeInfo, secret)
       .then((res) => alert(res.data.msg));
   }
   function createblog() {
-    editService
-      .create(analyzeInfo?.raw || "", secret)
-      .then((res) => alert(res.data.msg));
+    editService.create(analyzeInfo, secret).then((res) => alert(res.data.msg));
   }
-  function uploadImages() {
-    Promise.all(
-      images
-        .filter((image) => image.status === "notUploaded")
-        .map((image) => editService.uploadImage(image.file))
-    ).then((res) => {
-      // refresh list
-      let index = 0;
-      setImages(
-        images.map((image) =>
-          image.status === "uploaded"
-            ? image
-            : {
-                status: "uploaded",
-                file: image.file,
-                id: res[index++].data.data,
-              }
-        )
-      );
-    });
-  }
-  function configBlog() {
-    setShowConfig(true);
-  }
+  // function uploadImages() {
+  //   Promise.all(
+  //     images
+  //       .filter((image) => image.status === "notUploaded")
+  //       .map((image) => editService.uploadImage(image.file))
+  //   ).then((res) => {
+  //     // refresh list
+  //     let index = 0;
+  //     setImages(
+  //       images.map((image) =>
+  //         image.status === "uploaded"
+  //           ? image
+  //           : {
+  //               status: "uploaded",
+  //               file: image.file,
+  //               id: res[index++].data.data,
+  //             }
+  //       )
+  //     );
+  //   });
+  // }
+  // function configBlog() {
+  //   setShowConfig(true);
+  // }
   return (
     <div className="edit-page">
       <div className="edit-panel">
@@ -78,28 +98,15 @@ export default function TempPage() {
           ></input>
           <button onClick={updateContent}>更新</button>
           <button onClick={createblog}>创建</button>
-          <button onClick={configBlog}>文章参数</button>
+          {/* <button onClick={configBlog}>文章参数</button> */}
         </div>
-        <Editor
-          defaultLanguage="markdown"
-          value={analyzeInfo?.raw}
-          options={{ wordWrap: "on" }}
-          onChange={(value) => {
-            setAnalyzeInfo(analyzeMarkdown(value || ""));
-          }}
-        ></Editor>
-        <div className="image-panel">
-          <ImageList images={images} onImagesChange={setImages} />
-          <button onClick={uploadImages}>upload</button>
-        </div>
+        ;
       </div>
-      <div className="preview-panel">
-        <MarkdownPreview content={analyzeInfo?.text || ""} />
-      </div>
-      <Modal show={showConfig}>
-        <Table data={analyzeInfo?.headerProps}></Table>
-        <button onClick={() => setShowConfig(false)}>关闭</button>
-      </Modal>
+      <div
+        id="vditor"
+        className="vditor"
+        style={{ height: "90vh", width: "100vw" }}
+      />
     </div>
   );
 }
