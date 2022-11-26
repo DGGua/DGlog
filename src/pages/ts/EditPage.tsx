@@ -34,9 +34,6 @@ export default function TempPage() {
       },
     });
   }, []);
-  useEffect(() => {
-    vd?.setValue(analyzeInfo);
-  }, [analyzeInfo, vd]);
   function getContent() {
     if (!id) return;
     const idNum = Number.parseInt(id);
