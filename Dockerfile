@@ -1,7 +1,7 @@
-FROM node:14
+FROM node:16
 COPY ./ /app
 WORKDIR /app
-RUN pnpm install && pnpm build
+RUN npm i -g pnpm && pnpm install && pnpm build
 
 FROM nginx
 RUN mkdir /app
