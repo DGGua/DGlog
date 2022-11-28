@@ -17,7 +17,6 @@ export default function TempPage() {
   useEffect(() => {
     const vditor = new Vditor("vditor", {
       after: () => {
-        vditor.setValue(localStorage.getItem("buf") || "");
         setVd(vditor);
       },
     });
