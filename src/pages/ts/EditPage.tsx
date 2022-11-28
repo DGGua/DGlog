@@ -3,45 +3,40 @@ import Vditor from "vditor";
 import "vditor/dist/index.css";
 import { blogService } from "../../service/blogService";
 import { editService } from "../../service/editService";
+import { BlogBrief } from "../../types";
 import "../scss/EditPage.scss";
 export default function TempPage() {
   const [id, setId] = useState<string>();
   const [secret, setSecret] = useState<string>("");
-  const [analyzeInfo, setAnalyzeInfo] = useState<string>(
-    localStorage.getItem("buf") || ""
-  );
+  const [blogList, setBlogList] = useState<BlogBrief[]>([]);
   // const [images, setImages] = useState<ImageItem[]>([
   // { status: "uploaded", file: new File([], ""), id: "1F1C630D" },
   // ]);
+
   const [vd, setVd] = useState<Vditor>();
-  const [timeoutt, settimeoutt] = useState<NodeJS.Timeout>();
   useEffect(() => {
     const vditor = new Vditor("vditor", {
       after: () => {
-        vditor.setValue(analyzeInfo);
+        vditor.setValue(localStorage.getItem("buf") || "");
         setVd(vditor);
-      },
-      input: () => {
-        if (timeoutt) {
-          clearTimeout(timeoutt);
-        }
-        settimeoutt(
-          setTimeout(() => {
-            localStorage.setItem("buf", vditor.getValue());
-            setAnalyzeInfo(vditor.getValue());
-          }, 1000)
-        );
       },
     });
   }, []);
-  function getContent() {
-    if (!id) return;
-    const idNum = Number.parseInt(id);
+  useEffect(() => {
+    blogService.list().then((res) => setBlogList(res.data.data));
+  }, []);
+
+  function getContent(blog_id?: number) {
+    let idNum: number;
+    if (blog_id) idNum = blog_id;
+    else if (id) idNum = Number.parseInt(id);
+    else return;
     if (isNaN(idNum)) return;
     blogService.detail(idNum).then((res) => {
       let { content, title } = res.data.data;
       while (content.startsWith("\n")) content = content.slice(1);
-      setAnalyzeInfo(["# " + content, title].join("\n"));
+      vd?.setValue(["# " + content, title].join("\n"));
+      setId(idNum.toString());
     });
   }
   function updateContent() {
@@ -49,11 +44,14 @@ export default function TempPage() {
     const idNum = Number.parseInt(id);
     if (isNaN(idNum)) return;
     editService
-      .update(idNum, analyzeInfo, secret)
+      .update(idNum, vd?.getValue() || "", secret)
       .then((res) => alert(res.data.msg));
   }
   function createblog() {
-    editService.create(analyzeInfo, secret).then((res) => alert(res.data.msg));
+    editService.create(vd?.getValue() || "", secret).then((res) => {
+      alert(res.data.msg);
+      setId(res.data.data.toString());
+    });
   }
   // function uploadImages() {
   //   Promise.all(
@@ -85,7 +83,7 @@ export default function TempPage() {
         <div>
           id:
           <input value={id} onChange={(e) => setId(e.target.value)}></input>
-          <button onClick={getContent}>获取</button>
+          <button onClick={() => getContent()}>获取</button>
         </div>
         <div>
           secret:
@@ -97,7 +95,11 @@ export default function TempPage() {
           <button onClick={createblog}>创建</button>
           {/* <button onClick={configBlog}>文章参数</button> */}
         </div>
-        ;
+        <ul>
+          {blogList.map((brief) => (
+            <li onClick={() => getContent(brief.blog_id)}>{brief.title}</li>
+          ))}
+        </ul>
       </div>
       <div
         id="vditor"
