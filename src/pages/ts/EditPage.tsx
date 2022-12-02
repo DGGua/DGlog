@@ -34,7 +34,7 @@ export default function TempPage() {
     blogService.detail(idNum).then((res) => {
       let { content, title } = res.data.data;
       while (content.startsWith("\n")) content = content.slice(1);
-      vd?.setValue(["# " + content, title].join("\n"));
+      vd?.setValue(["# " + title, content].join("\n"));
       setId(idNum.toString());
     });
   }
