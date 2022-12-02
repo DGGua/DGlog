@@ -25,7 +25,9 @@ export default function BlogPage() {
   }, [blogId]);
   useEffect(() => {
     if (!blogDetail) return;
-    setContentHTML(sanitize(marked(blogDetail.content || "")));
+    setContentHTML(
+      sanitize(marked(["# " + blogDetail.title, blogDetail.content].join("\n")))
+    );
   }, [blogDetail]);
 
   useEffect(() => {
