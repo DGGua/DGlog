@@ -10,7 +10,9 @@ import * as HighLight from "highlight.js";
 import "highlight.js/scss/github.scss";
 marked.setOptions({
   highlight: (code, lang) =>
-    HighLight.default.highlight(code, { language: lang }).value,
+    lang == ""
+      ? code
+      : HighLight.default.highlight(code, { language: lang }).value,
 });
 
 export default function BlogPage() {
@@ -25,7 +27,9 @@ export default function BlogPage() {
   }, [blogId]);
   useEffect(() => {
     if (!blogDetail) return;
-    setContentHTML(sanitize(marked(blogDetail.content || "")));
+    setContentHTML(
+      sanitize(marked(["# " + blogDetail.title, blogDetail.content].join("\n")))
+    );
   }, [blogDetail]);
 
   useEffect(() => {
